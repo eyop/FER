@@ -1,20 +1,11 @@
-# import tkinter as tk
-# from tkinter import *
-# import cv2
-# import os
-# from PIL import Image, ImageTk
-# import numpy as np
-# import tensorflow as tf
-# import keras_preprocessing
-# from keras_preprocessing import image
-# from keras_preprocessing.image import ImageDataGenerator 
+# Import necessary libraries
 
 import cv2
 import numpy as np
 from keras_preprocessing import image
 import tensorflow as tf
 
-# Constants
+# Constants for emotion labels and color mapping
 EMOTION_LABELS = {
     0: 'Angry',
     1: 'Disgusted',
@@ -36,9 +27,14 @@ COLOR_MAPPING = {
 }
 
 def initialize_emotion_model():
-    """Initialize the emotion detection model and load pre-trained weights."""
+    
+    # Initialize the emotion detection model and load pre-trained weights.
+
+    # Returns:
+    # - model (tf.keras.models.Sequential): Pre-trained emotion detection model.
+    
     model = tf.keras.models.Sequential([
-        # ... (your model layers)
+        # Convolutional Neural Network layers for emotion detection
          #Ideal inputshape
        tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(48, 48, 1)),
        tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
@@ -63,7 +59,16 @@ def initialize_emotion_model():
     return model
 
 def preprocess_face_image(gray_img, x, y, w, h):
-    """Preprocess the face image for emotion prediction."""
+        
+    #     Preprocess the face image for emotion prediction.
+
+    #     Parameters:
+    #    - gray_img (numpy.ndarray): Grayscale image containing the face.
+    #    - x, y, w, h (int): Coordinates and dimensions of the detected face.
+
+    #    Returns:
+    #    - img_pixels (numpy.ndarray): Processed face image ready for emotion prediction.
+        
     roi_gray = gray_img[y:y + h, x:x + w]
     roi_gray = cv2.resize(roi_gray, (48, 48))
     img_pixels = image.img_to_array(roi_gray)
@@ -72,10 +77,22 @@ def preprocess_face_image(gray_img, x, y, w, h):
     return img_pixels
 
 def detect_emotion(face_casc, img, gray_img, emotion_model):
-    """Detect faces and emotions in the provided image."""
+    #    
+    #       Detect faces and emotions in the provided image.
+
+   	#   Parameters:
+   	#   - face_casc (cv2.CascadeClassifier): OpenCV Cascade Classifier for face detection.
+    #       - img (numpy.ndarray): Original image.
+    #       - gray_img (numpy.ndarray): Grayscale version of the original image.
+    #       - emotion_model (tf.keras.models.Sequential): Pre-trained emotion detection model.
+
+    #       Returns:
+    #       None (Displays emotion detection results in the provided image.)
+    #     
     faces = face_casc.detectMultiScale(gray_img, 1.3, 5)
     for (x, y, w, h) in faces:
-        # Extract face region
+        
+        # Extract face region and make emotion prediction
         face_image = preprocess_face_image(gray_img, x, y, w, h)
 
         # Make emotion prediction
@@ -93,7 +110,13 @@ def detect_emotion(face_casc, img, gray_img, emotion_model):
         cv2.putText(img, predicted_emotion, (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
 def main():
-    """Main function to capture video feed and perform emotion detection."""
+    #     
+    # Main function to capture video feed and perform emotion detection.
+
+    # Usage:
+    # - Run the script to capture video feed and visualize real-time emotion detection.
+    # 
+    # Open the camera and load Haar cascade for face detection
     cv2.ocl.setUseOpenCL(False)
     cap = cv2.VideoCapture(0)
 
@@ -102,6 +125,8 @@ def main():
         return
 
     face_casc = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    
+    # Initialize emotion detection model
     emotion_model = initialize_emotion_model()
 
     while True:
@@ -109,12 +134,15 @@ def main():
         if not ret:
             continue
 
+        # Convert frame to grayscale and detect emotions
         gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         detect_emotion(face_casc, frame, gray_img, emotion_model)
 
+        # Resize the frame for display and show the video feed
         resized_img = cv2.resize(frame, (1000, 700))
-        cv2.imshow('Emojify', resized_img)
+        cv2.imshow('Recognizer', resized_img)
 
+        # Break the loop if 'q' is pressed
         if cv2.waitKey(10) == ord('q'):
             break
 
