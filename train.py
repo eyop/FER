@@ -102,4 +102,4 @@ history = model.fit(
 )
 
 # Save the trained model weights to a file
-model.save_weights("model.h5")
+model.save_weights("Models/model.h5")

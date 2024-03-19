@@ -55,7 +55,7 @@ def initialize_emotion_model():
        #Dense with posible classes
        tf.keras.layers.Dense(7, activation='softmax')
       ])
-    model.load_weights('model.h5')
+    model.load_weights('Models/model.h5')
     return model
 
 def preprocess_face_image(gray_img, x, y, w, h):
