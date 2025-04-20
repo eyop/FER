@@ -102,16 +102,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - OpenCV for face detection
 - Keras/TensorFlow for deep learning implementation
 
-## 📧 Contact
 
-Eyob - [@your_twitter](https://twitter.com/your_handle) - your.email@example.com
-
-Project Link: [https://github.com/eyop/FER](https://github.com/eyop/FER)
-```
-
-Remember to:
-1. Replace placeholder content (especially in � Contact section)
-2. Add actual demo.gif to `/demo` folder
-3. Update model architecture details
-4. Add any additional project-specific information
-5. Verify all links and requirements match your actual project setup
